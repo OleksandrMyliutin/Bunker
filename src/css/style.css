@@ -8,7 +8,7 @@
 
 .parallax-layer {
   position: absolute;
-  width: 70px;
+  width: 55px;
   opacity: 0.75;
 }
 
@@ -35,5 +35,11 @@
     width: 140px;
     opacity: 0.55;
   }
+
+  .parallax-layer {
+  position: absolute;
+  width: 45px;
+  opacity: 0.75;
+}
   
 }
