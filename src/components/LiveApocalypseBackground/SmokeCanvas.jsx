@@ -25,10 +25,10 @@ export function useSmoke() {
     const particles = Array.from({ length: 20 }, () => ({
       x: Math.random() * canvas.width,
       y: canvas.height + Math.random() * 300,
-      speed: 0.4 + Math.random() * 0.5,
-      size: 250 + Math.random() * 150, // Розмір PNG
+      speed: 0.3 + Math.random() * 0.5,
+      size: 280 + Math.random() * 150,
       alpha: 0.08 + Math.random() * 0.05,
-      drift: (Math.random() - 0.5) * 0.4,
+      drift: (Math.random() - 0.9) * 0.4,
     }));
 
     function draw() {

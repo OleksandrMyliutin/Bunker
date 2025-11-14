@@ -32,7 +32,7 @@ export default function LiveApocalypseBackground() {
 
       {/* Паралакс-шари */}
       <motion.img src={radiation} className="parallax-layer floating" alt="radiation"
-        style={{  y: layer1Y, left: "10%", top: "20%" }} />
+        style={{  y: layer1Y, left: "10%", top: "20%", rotate: `${Math.random() * 30 - 15}deg`}} />
 
       <motion.img src={gasMask} className="parallax-layer floating"
         style={{ y: layer2Y, left: "47%", top: "37%" }} />

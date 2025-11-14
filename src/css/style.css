@@ -1,5 +1,6 @@
 .apocalypse-bg {
   position: fixed;
+  perspective: 800px;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
@@ -10,16 +11,24 @@
   position: absolute;
   width: 55px;
   opacity: 0.75;
+
+  transform-style: preserve-3d;
 }
 
 .parallax-layer.floating {
-  animation: float 6s ease-in-out infinite;
+  animation: float 4.8s ease-in-out infinite;
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
+  0% { 
+    transform: translateY(0px) rotate(-7deg); 
+  }
+  50% { 
+    transform: translateY(-10px) rotate(9deg);
+  }
+  100% { 
+    transform: translateY(0px) rotate(-7deg); 
+  }
 }
 
 .smoke-canvas {
