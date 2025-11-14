@@ -1,20 +1,3 @@
-.apocalypse-bg {
-  position: fixed;
-  perspective: 800px;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.parallax-layer {
-  position: absolute;
-  width: 55px;
-  opacity: 0.75;
-
-  transform-style: preserve-3d;
-}
-
 .parallax-layer.floating {
   animation: float 4.8s ease-in-out infinite;
 }
@@ -46,9 +29,52 @@
   }
 
   .parallax-layer {
-  position: absolute;
   width: 45px;
   opacity: 0.75;
 }
   
+}
+
+
+/* ==== ФОН ГРИ (живий фон) ==== */
+
+.apocalypse-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;           /* завжди ЗА ВСІМ */
+  pointer-events: none;  /* не ловить кліки */
+  perspective: 800px;
+  overflow: hidden;
+}
+
+/* дим, частинки, іконки — декор, не ловлять кліки */
+.smoke-canvas,
+#particles,
+.parallax-layer {
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.parallax-layer {
+  width: 55px;
+  opacity: 0.75;
+  transform-style: preserve-3d;
+}
+
+.parallax-layer.floating {
+  animation: float 4.8s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px) rotate(-7deg); }
+  50%  { transform: translateY(-10px) rotate(9deg); }
+  100% { transform: translateY(0px) rotate(-7deg); }
+}
+
+@media (max-width: 768px) {
+  .parallax-layer {
+    width: 45px;
+    opacity: 0.75;
+  }
 }

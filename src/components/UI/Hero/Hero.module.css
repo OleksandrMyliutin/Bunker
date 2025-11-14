@@ -1,0 +1,213 @@
+.heroWrapper {
+  position: relative;
+  width: 100%;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;         /* вище фону */
+  pointer-events: none; /* важливо: події тільки на внутрішніх блоках */
+}
+
+/* ---------- START SCREEN ---------- */
+
+.startScreen {
+  position: relative;
+  padding: 60px 40px;
+  text-align: center;
+  max-width: 600px;
+
+  background: rgba(10, 15, 10, 0.55);
+  border: 1px solid rgba(0, 255, 60, 0.25);
+  border-radius: 6px;
+  box-shadow:
+    0 0 25px rgba(0, 255, 80, 0.2),
+    inset 0 0 12px rgba(0, 255, 80, 0.15);
+
+  color: #a8ffb0;
+  font-family: "Share Tech Mono", monospace;
+
+  pointer-events: auto;  /* ⬅️ ЦЕ НАЙВАЖЛИВІШЕ */
+}
+
+.startScreen::before,
+.startScreen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.startScreen::before {
+  background-image: url("data:image/png;base64,iVBOR...");
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  animation: noiseMove 0.35s infinite;
+}
+
+.startScreen::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 40, 0.12) 0px,
+    rgba(0, 255, 40, 0.02) 2px,
+    transparent 3px
+  );
+  opacity: 0.22;
+}
+
+.startTitle {
+  font-size: 36px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(0, 255, 80, 0.35);
+  color: #caffc7;
+}
+
+.startSub {
+  font-size: 18px;
+  opacity: 0.75;
+  margin-bottom: 25px;
+}
+
+/* ---------- HERO (повідомлення після кліку) ---------- */
+
+.hero {
+  position: relative;
+  padding: 50px 40px;
+  max-width: 900px;
+  text-align: left;
+
+  background: rgba(10, 15, 10, 0.55);
+  border: 1px solid rgba(0, 255, 60, 0.25);
+  border-radius: 6px;
+  box-shadow:
+    0 0 25px rgba(0, 255, 80, 0.2),
+    inset 0 0 12px rgba(0, 255, 80, 0.15);
+
+  backdrop-filter: blur(3px);
+  color: #a8ffb0;
+  font-family: "Share Tech Mono", monospace;
+
+  pointer-events: auto;  /* ⬅️ теж клікабельний */
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero::before {
+  background-image: url("data:image/png;base64,iVBOR...");
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  animation: noiseMove 0.35s infinite;
+}
+
+.hero::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 40, 0.12) 0px,
+    rgba(0, 255, 40, 0.02) 2px,
+    transparent 3px
+  );
+  opacity: 0.22;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+  color: #caffc7;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(0, 255, 80, 0.3);
+}
+
+.hero p {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+
+.subtext {
+  margin-top: 20px;
+  font-size: 14px;
+  opacity: 0.75;
+  letter-spacing: 1px;
+  color: #8aff98;
+}
+
+/* ---------- CTA ---------- */
+
+.cta {
+  display: inline-block;
+  margin-top: 26px;
+  padding: 12px 30px;
+  font-size: 18px;
+  text-transform: uppercase;
+
+  background: rgba(0, 255, 80, 0.15);
+  border: 1px solid rgba(0, 255, 80, 0.4);
+  color: #a8ffb0;
+
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(0, 255, 80, 0.4);
+
+  transition: 0.25s;
+}
+
+.cta:hover {
+  background: rgba(0, 255, 80, 0.25);
+  box-shadow: 0 0 12px rgba(0, 255, 80, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ---------- Анімації ---------- */
+
+@keyframes noiseMove {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-2px, 1px); }
+  50%  { transform: translate(1px, -1px); }
+  75%  { transform: translate(1px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+
+.fadeIn {
+  animation: fade 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fade {
+  to { opacity: 1; }
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 768px) {
+  .hero,
+  .startScreen {
+    margin-top: 85px;
+    padding: 32px 20px;
+    text-align: center;
+  }
+
+  .hero h1,
+  .startTitle {
+    font-size: 26px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .cta {
+    width: 100%;
+    max-width: 260px;
+    font-size: 16px;
+  }
+}

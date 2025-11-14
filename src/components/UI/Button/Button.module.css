@@ -1,0 +1,46 @@
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    padding: 14px 39px;
+    width: 100%;
+    height: 60px;
+    color: var(--color-main);
+
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -0.01em;
+}
+
+.button.white{
+    background-color: var(--color-main);
+    color: var(--color-text);
+    border: 1px solid rgba(25, 26, 21, 0.2);
+}
+
+.md {
+    width: 124px;
+    height: 48px;
+    padding: 14px 39px;
+
+    font-size: 15px;
+    line-height: 125%;
+}
+
+.lg {
+    padding: 14px 40px;
+    width: 171px;
+    height: 48px;
+
+    font-size: 16px;
+    line-height: 125%;
+}
+
+/* .xl {
+  gap: 16px;
+  height: 57px;
+  padding: 16px;
+  font-size: 18px;
+} */

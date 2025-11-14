@@ -6,6 +6,7 @@ import { useSmoke } from "./SmokeCanvas";
 import radiation from "../../assets/radiation-sign.png";
 import gasMask from "../../assets/gas-mask.png"
 import "../../css/style.css";
+import Hero from "../UI/Hero/Hero";
 
 export default function LiveApocalypseBackground() {
   const smokeRef = useSmoke();
@@ -45,6 +46,8 @@ export default function LiveApocalypseBackground() {
 
       <motion.img src={radiation} className="parallax-layer floating"
         style={{ y: layer2Y, left: "90%", top: "12%" }} />
+
+        <Hero/>
     </div>
   );
 }
