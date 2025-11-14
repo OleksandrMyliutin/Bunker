@@ -1,0 +1,66 @@
+@import 'normalize.css';
+:root{
+  --color-main: #101828;
+  --color-text:#475467;
+  --color-gray: #6C717B;
+  --color-button: #E44848;
+  --color-buttonHover: #D84343;
+  --color-rating: #FFC531;
+  --color-grayLight: #DADDE1;
+  --color-badges: #F2F4F7;
+  --color-inputs: #F7F7F7;
+  --color-white: #FFFFFF;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  background: var(--color-white);
+}
+h1,p{
+  color:var(--color-inputs);
+}
+h1{
+  font-size: 48px;
+  line-height: 67%;
+  line-height: 32px;
+  margin: 0;
+}
+
+h2{
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 133%;
+  color: var(--color-main);
+}
+
+h3{
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--color-main);
+}
+p{
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+}
+button{
+  font-size: 16px;
+  line-height: 24px;
+  background: var(--color-button);
+  transition: background 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover{
+  background: var(--color-buttonHover)
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.bodyMargin{
+  margin-top: 48px;
+}
