@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-
+import s from "./RoomLobby.module.css"  
 function generateRoomCode() {
     return Math.random().toString(36).substring(2, 7).toUpperCase();
 }
 
-const RoomLobby = () => {
+const RoomLobby = ({onStartGame }) => {
     const [nickname, setNickname] = useState("");
     const [rooms, setRooms] = useState([]);
     const [currentRoom, setCurrentRoom] = useState(null);
@@ -23,29 +23,26 @@ const RoomLobby = () => {
             setError("Дай своїй кімнаті назву.");
             return;
         }
+            const code = generateRoomCode();
+        //Колекція хоста
+        const host = { 
+            id:crypto.randomUUID(),
+            nickname: nickname.trim(),
+            isHost: true,
+        };
+        //Колекція кімнати
+        const room = {
+            id: crypto.randomUUID(),
+            code: code,
+            name: roomName.trim(),
+            maxPlayers: 10,
+            players: [host],
+            status: "waiting..",
+        };
+
+        setRooms((prev) => [...prev, room]);
+        setCurrentRoom(room);
     };
-
-    const code = generateRoomCode();
-
-    //Колекція хоста
-    const host = { 
-        id:crypto.randomUUID(),
-        nickname: nickname.trim(),
-        isHost: true,
-    };
-
-    //Колекція кімнати
-    const room = {
-        id: crypto.randomUUID(),
-        code: code,
-        name: roomName.trim(),
-        maxPlayers: 10,
-        players: [host],
-        status: "waiting..",
-    };
-
-    setRooms((prev) => [...prev, room]);
-    setCurrentRoom(room);
 
     const handleJoinRoom = () => {
         setError("");
@@ -59,7 +56,7 @@ const RoomLobby = () => {
         }
 
         const room = rooms.find(
-            (r) => r.code.toUpperCase() === joinCode.trim.toUpperCase()
+            (r) => r.code.toUpperCase() === joinCode.trim().toUpperCase()
         );
 
         if(!room){
@@ -88,14 +85,81 @@ const RoomLobby = () => {
         setCurrentRoom(updateRoom);
     };
     
-    
-    
+    const handleStartGame = () => {
+        if(!currentRoom) return;
+        if(currentRoom.players.length < 4){
+            setError("Потрібно мінімум 4 гравці, щоб почати гру.");
+            return;
+        }
+        onStartGame?.(currentRoom);
+    };
 
-    return (
-        <div>
-        
+    if (!currentRoom) {
+        return (
+        <div className={s.lobbyWrapper}>
+            <h2>Лобі Бункера</h2>
+
+            <label>
+            Нікнейм
+            <input
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="Сталкер_1337"
+            />
+            </label>
+
+            <div>
+            <h3>Створити кімнату</h3>
+            <input
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
+                placeholder="Наприклад: Бункер друзів"
+            />
+            <button onClick={handleCreateRoom}>Створити кімнату</button>
+            </div>
+
+            <div>
+            <h3>Приєднатися до кімнати</h3>
+            <input
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value)}
+                placeholder="Введи код кімнати"
+            />
+            <button onClick={handleJoinRoom}>Приєднатися</button>
+            </div>
+
+            {error && <p style={{ color: "salmon" }}>{error}</p>}
         </div>
-    )
+        );
+    }
+  // Якщо вже в кімнаті — показуємо саму кімнату
+    return (
+        <div className={s.roomWrapper}>
+        <h2>Кімната: {currentRoom.name}</h2>
+        <p>Код кімнати: <strong>{currentRoom.code}</strong></p>
+
+        <h3>Гравці ({currentRoom.players.length}/{currentRoom.maxPlayers})</h3>
+        <ul>
+            {currentRoom.players.map((p) => (
+            <li key={p.id}>
+                {p.nickname} {p.isHost && "(хост)"}
+            </li>
+            ))}
+        </ul>
+
+        {error && <p style={{ color: "salmon" }}>{error}</p>}
+
+        <button
+            onClick={handleStartGame}
+            disabled={currentRoom.players.length < 4}
+        >
+            Почати гру
+        </button>
+        </div>
+        )
 }
 
 export default RoomLobby
+
+
+

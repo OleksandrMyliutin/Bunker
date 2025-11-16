@@ -1,0 +1,49 @@
+.lobbyWrapper {
+    padding: 40px;
+    max-width: 600px;
+    margin: 80px auto;
+    background: rgba(20, 25, 20, 0.6);
+    border: 1px solid rgba(0, 255, 80, 0.2);
+    color: #a8ffb0;
+    font-family: "Share Tech Mono", monospace;
+    border-radius: 4px;
+}
+
+.roomWrapper {
+    padding: 40px;
+    max-width: 600px;
+    margin: 80px auto;
+    background: rgba(15, 20, 15, 0.55);
+    border: 1px solid rgba(0, 255, 80, 0.2);
+    color: #a8ffb0;
+    font-family: "Share Tech Mono", monospace;
+    border-radius: 4px;
+}
+
+input {
+    width: 100%;
+    margin: 8px 0 12px;
+    padding: 10px;
+    background: rgba(0, 255, 80, 0.05);
+    border: 1px solid rgba(0, 255, 80, 0.25);
+    color: #caffc7;
+}
+
+button {
+    padding: 10px 20px;
+    background: rgba(0, 255, 80, 0.2);
+    border: 1px solid rgba(0, 255, 80, 0.4);
+    cursor: pointer;
+    color: #caffc7;
+    margin-top: 10px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error {
+    color: #ff8a8a;
+    margin-top: 10px;
+}

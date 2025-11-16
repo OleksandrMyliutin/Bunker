@@ -1,6 +1,7 @@
 import { useState } from "react";
 import s from "./Hero.module.css";
 import Button from "../Button/Button";
+import { NavLink } from "react-router-dom";
 
 export default function StartHero() {
   const [showHero, setShowHero] = useState(false);
@@ -39,7 +40,7 @@ export default function StartHero() {
             Тут кожен сам за себе. А бункер — не для всіх.
           </div>
 
-          <button className={s.cta}>Увійти в зону</button>
+          <NavLink className={s.cta}  to='/startGame'>Увійти в зону</NavLink>
         </div>
       )}
 
