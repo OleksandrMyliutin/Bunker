@@ -40,7 +40,7 @@ export default function StartHero() {
             Тут кожен сам за себе. А бункер — не для всіх.
           </div>
 
-          <NavLink className={s.cta}  to='/startGame'>Увійти в зону</NavLink>
+          <NavLink className={s.cta}  to='/landing'>Увійти в зону</NavLink>
         </div>
       )}
 

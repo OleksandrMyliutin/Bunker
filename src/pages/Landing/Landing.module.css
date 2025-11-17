@@ -1,0 +1,21 @@
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.btn {
+  padding: 12px;
+  background: rgba(0,255,80,0.15);
+  color: #caffc7;
+  border: 1px solid rgba(0,255,80,0.4);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 18px;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: rgba(0,255,80,0.25);
+  box-shadow: 0 0 10px rgba(0,255,80,0.4);
+}

@@ -6,7 +6,7 @@ import { useSmoke } from "./SmokeCanvas";
 import radiation from "../../assets/radiation-sign.png";
 import gasMask from "../../assets/gas-mask.png"
 import "../../css/style.css";
-import Hero from "../UI/Hero/Hero";
+import Hero from "../../components/Hero/Hero";
 
 export default function LiveApocalypseBackground() {
   const smokeRef = useSmoke();

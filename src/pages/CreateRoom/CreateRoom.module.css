@@ -1,0 +1,28 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input {
+  padding: 12px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,255,80,0.3);
+  color: #caffc7;
+  border-radius: 6px;
+  font-size: 18px;
+}
+
+.btn {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(0,255,80,0.15);
+  border: 1px solid rgba(0,255,80,0.4);
+  color: #caffc7;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: rgba(0,255,80,0.25);
+}
