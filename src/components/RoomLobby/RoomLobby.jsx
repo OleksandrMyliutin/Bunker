@@ -1,96 +1,102 @@
-import React, { useState } from 'react'
-import s from "./RoomLobby.module.css"  
+import React, { useEffect, useState } from "react";
+import s from "./RoomLobby.module.css";
+import { socket } from "../socket";
+
 function generateRoomCode() {
     return Math.random().toString(36).substring(2, 7).toUpperCase();
-}
+    }
 
-const RoomLobby = ({onStartGame }) => {
+    const RoomLobby = ({ onStartGame }) => {
     const [nickname, setNickname] = useState("");
-    const [rooms, setRooms] = useState([]);
     const [currentRoom, setCurrentRoom] = useState(null);
     const [roomName, setRoomName] = useState("");
     const [joinCode, setJoinCode] = useState("");
     const [error, setError] = useState("");
-    
-    //Створення лобі
-    const handleCreateRoom = () =>{
-        setError("");
-        if(!nickname.trim()){
-            setError("Введіть нікнейм, сталкере.");
-            return;
-        }
-        if(!roomName.trim()){
-            setError("Дай своїй кімнаті назву.");
-            return;
-        }
-            const code = generateRoomCode();
-        //Колекція хоста
-        const host = { 
-            id:crypto.randomUUID(),
-            nickname: nickname.trim(),
-            isHost: true,
-        };
-        //Колекція кімнати
-        const room = {
-            id: crypto.randomUUID(),
-            code: code,
-            name: roomName.trim(),
-            maxPlayers: 10,
-            players: [host],
-            status: "waiting..",
-        };
 
-        setRooms((prev) => [...prev, room]);
-        setCurrentRoom(room);
+
+    useEffect(() => {
+        socket.on("roomCreated", ({ roomId }) => {
+        setCurrentRoom({
+            code: roomId,
+            name: roomName,
+            players: [{ nickname, isHost: true }],
+            maxPlayers: 10
+        });
+        });
+
+        socket.on("roomNotFound", () => {
+        setError("Кімнату за таким кодом не знайдено.");
+        });
+
+        socket.on("roomJoined", ({ roomId }) => {
+        setCurrentRoom(prev => ({
+            ...prev,
+            code: roomId,
+            maxPlayers: 10
+        }));
+        });
+
+        socket.on("playerJoined", ({ players }) => {
+        setCurrentRoom(prev => ({ ...prev, players }));
+        });
+
+        return () => {
+        socket.off("roomCreated");
+        socket.off("roomNotFound");
+        socket.off("roomJoined");
+        socket.off("playerJoined");
+        };
+    }, [roomName, nickname]);
+
+    const handleCreateRoom = () => {
+        setError("");
+
+        if (!nickname.trim()) {
+        setError("Введіть нікнейм, сталкере.");
+        return;
+        }
+
+        if (!roomName.trim()) {
+        setError("Дай своїй кімнаті назву.");
+        return;
+        }
+
+        const code = generateRoomCode();
+
+        socket.emit("createRoom", {
+        roomId: code,
+        nickname
+        });
     };
 
     const handleJoinRoom = () => {
         setError("");
-        if(!nickname.trim()){
-            setError("Введіть нікнейм, сталкере.");
-            return;
-        }
-        if(!joinCode.trim()){
-            setError("Дай своїй кімнаті назву.");
-            return;
+
+        if (!nickname.trim()) {
+        setError("Введіть нікнейм, сталкере.");
+        return;
         }
 
-        const room = rooms.find(
-            (r) => r.code.toUpperCase() === joinCode.trim().toUpperCase()
-        );
-
-        if(!room){
-            setError("Кімнату за таким кодом не знайдено")
-            return;
-        };
-        if(room.players.length >= room.maxPlayers){
-            setError("Ця кімната вже заповнена. 10/10");
-            return;
+        if (!joinCode.trim()) {
+        setError("Введіть код кімнати.");
+        return;
         }
 
-        const newPlayer = {
-            id: crypto.randomUUID(),
-            nickname: nickname.trim(),
-            host: false,
-        };
-
-        const updateRoom = {
-            ...room,
-            players: [...room.players, newPlayer]
-        };
-
-        setRooms((prev) => {
-            prev.map((r) => (r.id === room.id ? updateRoom : r));
+        socket.emit("joinRoom", {
+        roomId: joinCode.trim(),
+        nickname
         });
-        setCurrentRoom(updateRoom);
     };
-    
+
+    // Запуск гри
     const handleStartGame = () => {
-        if(!currentRoom) return;
-        if(currentRoom.players.length < 4){
-            setError("Потрібно мінімум 4 гравці, щоб почати гру.");
-            return;
+        if (!currentRoom) return;
+
+        if (currentRoom.players.length < 4) {
+        setError("Потрібно мінімум 4 гравці, щоб почати гру.");
+        return;
         }
+
         onStartGame?.(currentRoom);
     };
 
@@ -132,16 +138,21 @@ const RoomLobby = ({onStartGame }) => {
         </div>
         );
     }
-  // Якщо вже в кімнаті — показуємо саму кімнату
+
     return (
         <div className={s.roomWrapper}>
         <h2>Кімната: {currentRoom.name}</h2>
-        <p>Код кімнати: <strong>{currentRoom.code}</strong></p>
+        <p>
+            Код кімнати: <strong>{currentRoom.code}</strong>
+        </p>
 
-        <h3>Гравці ({currentRoom.players.length}/{currentRoom.maxPlayers})</h3>
+        <h3>
+            Гравці ({currentRoom.players.length}/{currentRoom.maxPlayers})
+        </h3>
+
         <ul>
-            {currentRoom.players.map((p) => (
-            <li key={p.id}>
+            {currentRoom.players.map((p, index) => (
+            <li key={index}>
                 {p.nickname} {p.isHost && "(хост)"}
             </li>
             ))}
@@ -156,10 +167,7 @@ const RoomLobby = ({onStartGame }) => {
             Почати гру
         </button>
         </div>
-        )
-}
+    );
+};
 
-export default RoomLobby
-
-
-
+export default RoomLobby;
