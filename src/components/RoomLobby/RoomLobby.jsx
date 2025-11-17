@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import s from "./RoomLobby.module.css";
-import { socket } from "../socket";
+import { socket } from "../../socket";
 
 function generateRoomCode() {
     return Math.random().toString(36).substring(2, 7).toUpperCase();
