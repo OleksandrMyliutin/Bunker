@@ -1,33 +1,61 @@
 import { useState } from "react";
-import BunkerPanel from "../../components/BunkerPanel/BunkerPanel";
-import { socket } from "../../socket";
 import { useNavigate } from "react-router-dom";
-import s from "./CreateRoom.module.css";
+import { socket } from "../../socket";
+
+import BunkerPanel from "../../components/BunkerPanel/BunkerPanel";
+import BunkerInput from "../../components/BunkerInput/BunkerInput";
+import BunkerButton from "../../components/BunkerButton/BunkerButton";
+
+import styles from "./CreateRoom.module.css";
+
+function generateRoomCode() {
+  return Math.random().toString(36).substring(2, 7).toUpperCase();
+}
 
 export default function CreateRoom() {
-  const [nick, setNick] = useState("");
+  const [nickname, setNickname] = useState("");
   const [roomName, setRoomName] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const create = () => {
-    const roomId = Math.random().toString(36).substring(2, 7).toUpperCase();
+    setError("");
 
-    socket.emit("createRoom", { roomId, nickname: nick });
+    if (!nickname.trim()) return setError("Введи нік.");
+    if (!roomName.trim()) return setError("Введи назву кімнати.");
 
-    socket.on("roomCreated", () => {
-      localStorage.setItem("nickname", nick);
+    const roomId = generateRoomCode();
+
+    socket.emit("createRoom", { roomId, nickname });
+
+    socket.once("roomCreated", () => {
+      localStorage.setItem("nickname", nickname);
       localStorage.setItem("roomId", roomId);
       navigate(`/room?room=${roomId}`);
     });
   };
 
   return (
-    <BunkerPanel title="Створення кімнати" subtitle="Підготуй бункер до виживання.">
-      <div className={s.form}>
-        <input className={s.input} placeholder="Нік" value={nick} onChange={e => setNick(e.target.value)} />
-        <input className={s.input} placeholder="Назва кімнати" value={roomName} onChange={e => setRoomName(e.target.value)} />
+    <BunkerPanel title="Створення кімнати" subtitle="Задай назву та нік">
+      <div className={styles.wrapper}>
+        <BunkerInput
+          placeholder="Твій нік"
+          value={nickname}
+          onChange={setNickname}
+        />
 
-        <button className={s.btn} onClick={create}>Створити</button>
+        <BunkerInput
+          placeholder="Назва кімнати"
+          value={roomName}
+          onChange={setRoomName}
+        />
+
+        <BunkerButton onClick={create}>
+          Створити кімнату
+        </BunkerButton>
+
+        {error && <div className={styles.error}>{error}</div>}
       </div>
     </BunkerPanel>
   );

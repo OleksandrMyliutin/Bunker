@@ -1,4 +1,4 @@
-import s from "./BunkerButton.module.css";
+import s from "./BunkerPanel.module.css";
 
 export default function BunkerPanel({ title, subtitle, children }) {
     return (

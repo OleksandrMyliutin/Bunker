@@ -1,0 +1,22 @@
+.btn {
+  padding: 12px 20px;
+  background: rgba(0, 255, 80, 0.15);
+  border: 1px solid rgba(0, 255, 80, 0.4);
+  border-radius: 6px;
+  color: #caffc7;
+  cursor: pointer;
+  transition: 0.22s;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.btn:hover:not(:disabled) {
+  background: rgba(0, 255, 80, 0.25);
+  box-shadow: 0 0 14px rgba(0, 255, 80, 0.4);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

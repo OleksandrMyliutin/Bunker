@@ -1,40 +1,38 @@
 import { useState, useEffect } from "react";
-import BunkerPanel from "../../components/BunkerPanel/BunkerPanel";
-import { socket } from "../../socket";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import s from "./JoinRoom.module.css";
+import { socket } from "../../socket";
+
+import BunkerPanel from "../../components/BunkerPanel/BunkerPanel";
+import BunkerInput from "../../components/BunkerInput/BunkerInput";
+import BunkerButton from "../../components/BunkerButton/BunkerButton";
+
+import styles from "./JoinRoom.module.css";
 
 export default function JoinRoom() {
   const [nickname, setNickname] = useState("");
   const [roomId, setRoomId] = useState("");
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
   const [params] = useSearchParams();
+  const navigate = useNavigate();
 
-  // Автопідставлення коду з запрошення
+  // автопідставлення коду з URL
   useEffect(() => {
     const code = params.get("room");
     if (code) setRoomId(code.toUpperCase());
   }, []);
 
-  const joinRoom = () => {
-    if (!nickname.trim()) {
-      setError("Введи свій нік.");
-      return;
-    }
-    if (!roomId.trim()) {
-      setError("Введи код кімнати.");
-      return;
-    }
+  const join = () => {
+    setError("");
+
+    if (!nickname.trim()) return setError("Введи нік.");
+    if (!roomId.trim()) return setError("Введи код кімнати.");
 
     socket.emit("joinRoom", { roomId, nickname });
 
-    socket.on("roomNotFound", () => {
-      setError("Такої кімнати не існує.");
-    });
+    socket.once("roomNotFound", () => setError("Кімната не знайдена."));
 
-    socket.on("roomJoined", () => {
+    socket.once("roomJoined", () => {
       localStorage.setItem("nickname", nickname);
       localStorage.setItem("roomId", roomId);
       navigate(`/room?room=${roomId}`);
@@ -42,30 +40,23 @@ export default function JoinRoom() {
   };
 
   return (
-    <BunkerPanel
-      title="Приєднання"
-      subtitle="Введи код і займи місце в бункері."
-    >
-      <div className={s.form}>
-        <input
-          className={s.input}
-          placeholder="Нік"
+    <BunkerPanel title="Приєднання" subtitle="Введи нік і код, щоб увійти">
+      <div className={styles.wrapper}>
+        <BunkerInput
+          placeholder="Твій нік"
           value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+          onChange={setNickname}
         />
 
-        <input
-          className={s.input}
+        <BunkerInput
           placeholder="Код кімнати"
           value={roomId}
-          onChange={(e) => setRoomId(e.target.value.toUpperCase())}
+          onChange={(v) => setRoomId(v.toUpperCase())}
         />
 
-        <button className={s.btn} onClick={joinRoom}>
-          Увійти
-        </button>
+        <BunkerButton onClick={join}>Увійти</BunkerButton>
 
-        {error && <p className={s.error}>{error}</p>}
+        {error && <div className={styles.error}>{error}</div>}
       </div>
     </BunkerPanel>
   );
