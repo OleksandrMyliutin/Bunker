@@ -1,6 +1,6 @@
 import styles from "./BunkerButton.module.css";
 
-export default function BunkerButton({ children, onClick, disabled }) {
+export default function BunkerButton({ children, onClick, disabled}) {
   return (
     <button
       className={styles.btn}

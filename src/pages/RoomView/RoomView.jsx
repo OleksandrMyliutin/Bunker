@@ -7,7 +7,7 @@ import PlayerList from "../../components/PlayerList/PlayerList";
 import InviteLink from "../../components/InviteLink/InviteLink";
 import BunkerButton from "../../components/BunkerButton/BunkerButton";
 
-import styles from "./RoomView.module.css";
+import s from "./RoomView.module.css";
 
 export default function RoomView() {
   const [params] = useSearchParams();
@@ -15,21 +15,23 @@ export default function RoomView() {
 
   const [players, setPlayers] = useState([]);
   const [host, setHost] = useState("");
+  const [roomName, setRoomName] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // отримуємо стан кімнати при вході
   useEffect(() => {
     socket.emit("getRoomState", roomId);
 
-    socket.once("roomState", ({ players, host }) => {
+    socket.once("roomState", ({ players, host, name }) => {
       setPlayers(players);
       setHost(host);
+      setRoomName(name);
       setLoading(false);
     });
 
-    socket.on("playerJoined", ({ players, host }) => {
+    socket.on("playerJoined", ({ players, host, name }) => {
       setPlayers(players);
       setHost(host);
+      setRoomName(name);
     });
 
     return () => {
@@ -37,27 +39,30 @@ export default function RoomView() {
     };
   }, []);
 
+  const isHost = host === localStorage.getItem("nickname");
+  const canStart = players.length >= 4;
+
   if (loading) {
-    return (
-      <BunkerPanel title="Завантаження..." subtitle="Зачекай трохи" />
-    );
+    return <BunkerPanel title="Завантаження..." subtitle="Зачекай трохи" />;
   }
 
   return (
     <BunkerPanel
-      title={`Кімната ${roomId}`}
-      subtitle="Очікування гравців"
+      title={`Кімната: ${roomName}`}
+      subtitle={`Очікування гравців… (${players.length}/10)`}
+      secondSubtitle={`Індетифікатор кімнати (${roomId})`}
     >
       <InviteLink roomId={roomId} />
 
-      <div className={styles.playersBlock}>
-        <h3 className={styles.label}>Гравці</h3>
-
+      <div className={s.playersBlock}>
+        <h3 className={s.label}>Гравці</h3>
         <PlayerList players={players} host={host} />
       </div>
 
-      {host === localStorage.getItem("nickname") && (
-        <BunkerButton>Почати гру</BunkerButton>
+      {isHost && (
+        <BunkerButton disabled={!canStart}>
+          Почати гру
+        </BunkerButton>
       )}
     </BunkerPanel>
   );

@@ -3,61 +3,72 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { socket } from "../../socket";
 
 import BunkerPanel from "../../components/BunkerPanel/BunkerPanel";
-import BunkerInput from "../../components/BunkerInput/BunkerInput";
 import BunkerButton from "../../components/BunkerButton/BunkerButton";
 
-import styles from "./JoinRoom.module.css";
+import s from "./JoinRoom.module.css";
 
 export default function JoinRoom() {
-  const [nickname, setNickname] = useState("");
-  const [roomId, setRoomId] = useState("");
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+
+  const autoRoom = params.get("room");
+
+  const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
+  const [roomCode, setRoomCode] = useState(autoRoom || "");
   const [error, setError] = useState("");
 
-  const [params] = useSearchParams();
-  const navigate = useNavigate();
-
-  // автопідставлення коду з URL
+  // Auto-fill if joined via link
   useEffect(() => {
-    const code = params.get("room");
-    if (code) setRoomId(code.toUpperCase());
-  }, []);
+    if (autoRoom) setRoomCode(autoRoom.toUpperCase());
+  }, [autoRoom]);
 
-  const join = () => {
+  // Listeners
+  socket.on("roomError", (msg) => setError(msg));
+
+  socket.on("roomJoined", ({ roomId }) => {
+    navigate(`/room?room=${roomId}`);
+  });
+
+  const handleJoin = () => {
     setError("");
 
-    if (!nickname.trim()) return setError("Введи нік.");
-    if (!roomId.trim()) return setError("Введи код кімнати.");
+    if (!nickname.trim()) return setError("Введи нікнейм.");
+    if (!roomCode.trim()) return setError("Введи код кімнати.");
 
-    socket.emit("joinRoom", { roomId, nickname });
+    localStorage.setItem("nickname", nickname.trim());
 
-    socket.once("roomNotFound", () => setError("Кімната не знайдена."));
-
-    socket.once("roomJoined", () => {
-      localStorage.setItem("nickname", nickname);
-      localStorage.setItem("roomId", roomId);
-      navigate(`/room?room=${roomId}`);
+    socket.emit("joinRoom", {
+      nickname: nickname.trim(),
+      roomId: roomCode.trim().toUpperCase(),
     });
   };
 
   return (
-    <BunkerPanel title="Приєднання" subtitle="Введи нік і код, щоб увійти">
-      <div className={styles.wrapper}>
-        <BunkerInput
-          placeholder="Твій нік"
+    <BunkerPanel title="Вхід у кімнату" subtitle="Сталкере, введи код">
+      
+      <div className={s.block}>
+        <label>Нікнейм</label>
+        <input
           value={nickname}
-          onChange={setNickname}
+          onChange={(e) => setNickname(e.target.value)}
+          placeholder="Shurik"
         />
-
-        <BunkerInput
-          placeholder="Код кімнати"
-          value={roomId}
-          onChange={(v) => setRoomId(v.toUpperCase())}
-        />
-
-        <BunkerButton onClick={join}>Увійти</BunkerButton>
-
-        {error && <div className={styles.error}>{error}</div>}
       </div>
+
+      <div className={s.block}>
+        <label>Код кімнати</label>
+        <input
+          value={roomCode}
+          onChange={(e) => setRoomCode(e.target.value)}
+          placeholder="Наприклад: UOW6E"
+        />
+      </div>
+
+      <BunkerButton onClick={handleJoin}>
+        Приєднатися
+      </BunkerButton>
+
+      {error && <p className={s.error}>{error}</p>}
     </BunkerPanel>
   );
 }
